@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body{
+      width: 100%;
+      padding: 1rem;
+      background: var(--color);
+    }
+  </style>
+  <title>Subject Scheduling System by Renz Cole</title>
+</head>
+<body>
+  <div class="navigation">
+    <div class="navBar">
+      <div class="navInfo">
+        <div class="logo">
+          <img src="/image/logo.jpg"/>
+        </div>
+        <div class="navTitle">
+          <h3>CodeBuddy Solutions</h3>
+          <p>Turn your ideas into reality</p>
+        </div>
+      </div>
+      <div class="menuBtn">
+        <i class="fa-solid fa-bars menuIcon"></i>
+      </div>
+    </div>
+    <div class="toggleMenu">
+      <div class="devCon">
+        <div class="socials">
+          <p>You can connect with me on these platforms: </p>
+          <div class="socialBtns">
+            <a href="https://www.facebook.com/bosscleo3233">
+              <i class="fa-brands fa-facebook"></i>
+            </a>
+            <a href="https://www.youtube.com/@CodeBuddySolutions">
+              <i class="fa-brands fa-youtube"></i>
+            </a>
+            <a href="https://github.com/CodeBuddySLTNS"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="title">Subject Scheduling System</h1>
+  <h3 class="h3LabelName">Department</h3>
+  <div class="scheduleContainer">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Subject</td>
+          <th>Time</td>
+          <th>Room</td>
+          <th>Day</td>
+          <th>Instructor</td>
+        </tr>
+      </thead>
+      <tbody class="contents">
+<!--         
+<tr>
+  <td>Math</td>
+  <td>7:00 - 8:00 AM</td>
+  <td>4</td>
+  <td>Vincent Mark Jutba</td>
+</tr>
+<tr>
+  <td>English</td>
+  <td>9:00 - 10:00 AM</td>
+  <td>6</td>
+  <td>Ramiejeanne Calibo</td>
+</tr>
+ -->
+      </tbody>
+    </table>
+    <p class="nodata" style="width:100%;text-align:center;padding:0.7rem 0 0">No data to show.</p>
+  </div>
+  
+  <div class="addSubjectContainer">
+    <div class="addSubjectInputs">
+      <input 
+        type="text"
+        placeholder="Add subject"
+        class="addSubject"
+        required
+      />
+      
+      <div class="timeSlot">
+        <input 
+          type="number" 
+          placeholder="HH"
+          class="SHours"
+          required
+        />
+        <span>:</span>
+        <input 
+          type="number" 
+          placeholder="MM"
+          class="SMinutes"
+          required
+        />
+        <span> - </span>
+        <input 
+          type="number" 
+          placeholder="HH"
+          class="EHours"
+          required
+        />
+        <span>:</span>
+        <input 
+          type="number" 
+          placeholder="MM"
+          class="EMinutes"
+          required
+        />
+        <select class="option">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+      
+      <select class="day">
+        <option disabled selected value="">Select day...</option>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+      </select>
+      
+      <input 
+        type="text"
+        placeholder="Room"
+        class="room"
+      />
+      
+      <input 
+        type="text"
+        placeholder="Instructor"
+        class="instructor"
+      />
+
+    </div>
+    <p class="fillout" style="display:none;font-size:0.95rem;padding:3px 2px 0">Please fill out all the field.</p>
+    <div class="btns">
+      <button class="addButton">ADD</button>
+      <button class="saveButton">SAVE</button>
+    </div>
+  </div>
+  
+  <div class="popupBoxContainer">
+    <div class="popupBox">
+      <p class="popupBoxInfo">Conflict time with Math.</p>
+      <button class="popupButton">Okay</button>
+    </div>
+
+  </div>
+  
+  <div class="demo"></div>
+  
+  <script src="/script.js"></script>
+</body>
+</html>

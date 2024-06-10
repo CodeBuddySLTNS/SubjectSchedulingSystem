@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
+
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Subject Scheduling System by Renz Cole</title>
+</head>
+<body>
+  <div class="navigation">
+    <div class="navBar">
+      <div class="navInfo">
+        <div class="logo">
+          <img src="/image/logo.jpg"/>
+        </div>
+        <div class="navTitle">
+          <h3>CodeBuddy Solutions</h3>
+          <p>Turn your ideas into reality</p>
+        </div>
+      </div>
+      <div class="menuBtn">
+        <i class="fa-solid fa-bars menuIcon"></i>
+      </div>
+    </div>
+    <div class="toggleMenu">
+      <div class="devCon">
+        <div class="socials">
+          <p>You can connect with me on these platforms: </p>
+          <div class="socialBtns">
+            <a href="https://www.facebook.com/bosscleo3233">
+              <i class="fa-brands fa-facebook"></i>
+            </a>
+            <a href="https://www.youtube.com/@CodeBuddySolutions">
+              <i class="fa-brands fa-youtube"></i>
+            </a>
+            <a href="https://github.com/CodeBuddySLTNS"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <h2 class="systemTitle">Subject Scheduling System</h2>
+    <div class="contentSchedule">
+<!-- <h3>1st Semester S.Y. 2024-2025 PAC SALUG CAMPUS</h3> -->
+  </div>
+    <h3 class="addScheduleLabel">Add Schedule Label</h3>
+  </div>
+  
+  <div class="addScheduleInputContainer">
+    <div class="addScheduleInput">
+      <p>Add Schedule Label</p>
+      <input class="scheduleInput" type="text"/>
+      <div class="addScheduleBtns">
+        <button class="cancelBtn">Cancel</button>
+        <button class="addBtn">Add</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const addScheduleInputContainer = document.querySelector(".addScheduleInputContainer");
+    const scheduleInput = document.querySelector(".scheduleInput");
+    const toggleMenu = document.querySelector(".toggleMenu");
+    const menuBtn = document.querySelector(".menuBtn");
+    const menuIcon = document.querySelector(".menuIcon");
+
+    menuBtn.onclick = () => {
+      if(toggleMenu.offsetHeight > 0){
+        toggleMenu.style.height = 0;
+        toggleIcon();
+      }else{
+        toggleMenu.style.height = "104px";
+        toggleIcon();
+      }
+    }
+    
+    function toggleIcon(){
+      menuIcon.classList.toggle("fa-xmark");
+      menuIcon.classList.toggle("fa-bars");
+    }
+    
+    // onload fetch Schedule labels from server
+    window.onload = () => {
+      fetch("/api/getAllSchedLabel")
+        .then(res => res.json())
+        .then(folders => {
+          const data = folders.response;
+          data.forEach(folder => {
+            const element = document.createElement("a");
+            element.setAttribute("href", `/sched/data/${folder}`)
+            element.innerHTML = `<h3>${folder}</h3>`;
+            document.querySelector(".contentSchedule").appendChild(element);
+          })
+        })
+        .catch(err => console.log(err))
+    }
+    
+    // Add label popup box
+    document.querySelector(".addScheduleLabel").onclick = () => {
+      addScheduleInputContainer.style.display = "block";
+      scheduleInput.focus();
+    }
+    
+    document.querySelector(".cancelBtn").onclick = () => {
+      addScheduleInputContainer.style.display = "none";
+      scheduleInput.value = "";
+    }
+    
+    document.querySelector(".addBtn").onclick = () => {
+      if(scheduleInput.value.length > 0){
+        const element = document.createElement("a");
+        element.setAttribute("href", `/sched/${scheduleInput.value}`)
+        element.innerHTML = `<h3>${scheduleInput.value}</h3>`;
+        fetch(`/api/createSchedLabel?label=${scheduleInput.value}`)
+          .then(res => res.json())
+          .then(data => {
+            if(data.status === "success"){
+              document.querySelector(".contentSchedule").appendChild(element);
+            }else{
+              alert("File already exist.")
+            }
+          })
+          .catch(e => {
+            console.log(e);
+            alert("An Error occured.")
+            })
+        
+        
+        addScheduleInputContainer.style.display = "none";
+        scheduleInput.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
