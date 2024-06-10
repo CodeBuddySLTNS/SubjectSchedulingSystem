@@ -10,7 +10,7 @@ const getAllScheduleLabels = async (req, res) => {
         res.json({response: folders})
       }
     })
-  } catch (e) {}
+  } catch (e) {console.log(e)}
 }
 
 const createScheduleLabel = async (req, res) => {
@@ -24,7 +24,7 @@ const createScheduleLabel = async (req, res) => {
         res.json({status: "success"})
       }
     });
-  } catch (e) {console.log(e);}
+  } catch (e) {console.log(e)}
 }
 
 const getAllDepartmentSched = async (req, res) => {

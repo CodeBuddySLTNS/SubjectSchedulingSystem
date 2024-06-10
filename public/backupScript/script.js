@@ -39,7 +39,7 @@ const labelName = urlPath.slice(urlPath.indexOf("sched", urlPath.indexOf("sched"
 const url = urlPath.slice(0, urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) - 1);
 const department = urlPath.slice(urlPath.indexOf("depart") + 7);
 
-document.querySelector('.h3LabelName').innerText = `${department} Schedule`;
+document.querySelector('.h3LabelName').innerText = `${decodeURI(department)} Schedule`;
 
 let schedule = [];
 
