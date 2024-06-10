@@ -35,9 +35,9 @@ const popupBoxContainer = document.querySelector('.popupBoxContainer');
 const popupBoxInfo = document.querySelector('.popupBoxInfo');
 
 const urlPath = window.location.href;
-const labelName = urlPath.slice(urlPath.indexOf("sched") + 15, urlPath.indexOf("/depart"));
+const labelName = urlPath.slice(urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) + 15, urlPath.indexOf("/depart"));
+const url = urlPath.slice(0, urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) - 1);
 const department = urlPath.slice(urlPath.indexOf("depart") + 7);
-const url = urlPath.slice(0, urlPath.indexOf("sched") - 1);
 
 document.querySelector('.h3LabelName').innerText = `${department} Schedule`;
 

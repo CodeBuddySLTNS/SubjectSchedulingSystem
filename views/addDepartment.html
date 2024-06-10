@@ -87,8 +87,8 @@
     }
     
     const urlPath = window.location.href;
-    const labelName = urlPath.slice(urlPath.indexOf("sched") + 11);
-    const url = urlPath.slice(0, urlPath.indexOf("sched") - 1);
+    const labelName = urlPath.slice(urlPath.indexOf("sched", urlPath.indexOf("sched") +1) + 11);
+    const url = urlPath.slice(0, urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) - 1);
     schedLabel.innerText = decodeURI(labelName);
     
     // onload fetch Department Schedules from server
