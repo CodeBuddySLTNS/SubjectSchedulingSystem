@@ -235,7 +235,7 @@ a{
 .table tr{
   display: grid;
   gap: 5px;
-  grid-template-columns:  minmax(7.5rem, 1fr) minmax(7.6rem, 1fr) minmax(5rem, 1fr) minmax(5.5rem, 1fr) minmax(7.5rem, 1fr);
+  grid-template-columns:  minmax(7.5rem, 1fr) minmax(7.8rem, 1fr) minmax(5rem, 1fr) minmax(5.5rem, 1fr) minmax(7.5rem, 1fr);
 }
 
 .table td{

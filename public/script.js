@@ -129,7 +129,6 @@ addBtn.onclick = async function(){
     }else{
       const isConflict = await isAllSchedConflict(sched);
       if(isConflict){return}
-      alert("no conflict")
       schedule.push(sched);
     }
     
