@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
   <style>
     body{
-      width: 100%;
       padding: 1rem;
       background: var(--color);
     }
   </style>
-  <title>Subject Scheduling System by Renz Cole</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Subject Scheduling System</title>
 </head>
 <body>
   <div class="navigation">
@@ -33,6 +33,9 @@
     </div>
     <div class="toggleMenu">
       <div class="devCon">
+        <a href="#" class="homeLink">
+          <p>Home</p>
+        </a>
         <div class="socials">
           <p>You can connect with me on these platforms: </p>
           <div class="socialBtns">
@@ -152,14 +155,25 @@
     <p class="fillout" style="display:none;font-size:0.95rem;padding:3px 2px 0">Please fill out all the field.</p>
     <div class="btns">
       <button class="addButton">ADD</button>
-      <button class="saveButton">SAVE</button>
+      <button onclick="ExportAsDoc()" class="saveButton">EXPORT DOCUMENT</button>
     </div>
   </div>
   
   <div class="popupBoxContainer">
     <div class="popupBox">
-      <p class="popupBoxInfo">Conflict time with Math.</p>
+      <p class="popupBoxInfo"></p>
       <button class="popupButton">Okay</button>
+    </div>
+
+  </div>
+  
+  <div class="popupBoxContainer2">
+    <div class="popupBox2">
+      <p class="popupBoxInfo2"></p>
+      <div class="btnss">
+        <button class="popupButton2 cancelDel" onclick="canceldelete()">Cancel</button>
+        <button class="popupButton2 deleteLabel" onclick="deleteDepartment()">Delete</button>
+      </div>
     </div>
 
   </div>
@@ -167,5 +181,5 @@
   <div class="demo"></div>
   
   <script src="/script.js"></script>
-</body>
+</img>
 </html>

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
 
   <link rel="stylesheet" href="/css/styles.css">
-  <title>Subject Scheduling System by Renz Cole</title>
+  <title>Subject Scheduling System</title>
 </head>
 <body>
   <div class="navigation">
@@ -28,6 +28,9 @@
     </div>
     <div class="toggleMenu">
       <div class="devCon">
+        <a href="/" class="homeLink">
+          <p>Home</p>
+        </a>
         <div class="socials">
           <p>You can connect with me on these platforms: </p>
           <div class="socialBtns">
@@ -69,15 +72,10 @@
     const toggleMenu = document.querySelector(".toggleMenu");
     const menuBtn = document.querySelector(".menuBtn");
     const menuIcon = document.querySelector(".menuIcon");
-
+    
     menuBtn.onclick = () => {
-      if(toggleMenu.offsetHeight > 0){
-        toggleMenu.style.height = 0;
-        toggleIcon();
-      }else{
-        toggleMenu.style.height = "104px";
-        toggleIcon();
-      }
+      toggleMenu.classList.toggle("toggle");
+      toggleIcon();
     }
     
     function toggleIcon(){
@@ -115,7 +113,7 @@
     document.querySelector(".addBtn").onclick = () => {
       if(scheduleInput.value.length > 0){
         const element = document.createElement("a");
-        element.setAttribute("href", `/sched/${scheduleInput.value}`)
+        element.setAttribute("href", `/sched/data/${scheduleInput.value}`)
         element.innerHTML = `<h3>${scheduleInput.value}</h3>`;
         fetch(`/api/createSchedLabel?label=${scheduleInput.value}`)
           .then(res => res.json())

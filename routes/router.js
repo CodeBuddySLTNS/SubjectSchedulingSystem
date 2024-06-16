@@ -11,7 +11,10 @@ const {
   getAllDepartmentSched,
   createSchedJSON,
   getScheduleData,
-  getDepartmentSchedData
+  getDepartmentSchedData,
+  generateDocument,
+  deleteSchedLabel,
+  deleteDepartmentSched
 } = require("../api/getSchedules");
 
 staticSite.get('/data/:label', async (req, res) => {
@@ -43,7 +46,7 @@ staticSite.get("/addsched/:label/depart/:department", async (req, res) => {
       }
     })
   } catch (e) {console.log(e)}
-})
+});
 
 // api requests
 router.get("/getAllSchedLabel", getAllScheduleLabels);
@@ -59,6 +62,12 @@ router.get("/createSchedJSON", createSchedJSON);
 router.get("/getScheduleData", getScheduleData);
 
 router.get("/getDepartmentSchedData", getDepartmentSchedData);
+
+router.get("/generateDocument", generateDocument);
+
+router.get("/deleteSchedLabel", deleteSchedLabel);
+
+router.get("/deleteDepartmentSched", deleteDepartmentSched);
 
 module.exports = {
   router,

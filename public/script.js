@@ -1,6 +1,5 @@
 const contents = document.querySelector(".contents");
 const addBtn = document.querySelector(".addButton");
-const saveBtn = document.querySelector(".saveButton");
 const day = document.querySelector(".day");
 const subject = document.querySelector(".addSubject");
 const room = document.querySelector(".room");
@@ -12,13 +11,8 @@ const menuBtn = document.querySelector(".menuBtn");
 const menuIcon = document.querySelector(".menuIcon");
 
 menuBtn.onclick = () => {
-  if(toggleMenu.offsetHeight > 0){
-    toggleMenu.style.height = 0;
-    toggleIcon();
-  }else{
-    toggleMenu.style.height = "104px";
-    toggleIcon();
-  }
+  toggleMenu.classList.toggle("toggle");
+  toggleIcon();
 }
     
 function toggleIcon(){
@@ -32,14 +26,16 @@ const SMinutes = document.querySelector(".SMinutes");
 const EHours = document.querySelector(".EHours");
 const EMinutes = document.querySelector(".EMinutes");
 const popupBoxContainer = document.querySelector('.popupBoxContainer');
+const popupBoxContainer2 = document.querySelector(".popupBoxContainer2");
 const popupBoxInfo = document.querySelector('.popupBoxInfo');
 
 const urlPath = window.location.href;
-const labelName = urlPath.slice(urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) + 15, urlPath.indexOf("/depart"));
-const url = urlPath.slice(0, urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) - 1);
+const labelName = urlPath.slice(urlPath.indexOf("/sched/") + 16, urlPath.indexOf("/depart"));
+const url = urlPath.slice(0, urlPath.indexOf("/sched/"));
 const department = urlPath.slice(urlPath.indexOf("depart") + 7);
 
-document.querySelector('.h3LabelName').innerText = `${decodeURI(department)} Schedule`;
+document.querySelector('.h3LabelName').innerHTML = `${decodeURI(department)} Schedule <button class="deleteBtn"><i class="fa-solid fa-trash-can"></i></button>`;
+document.querySelector(".homeLink").setAttribute("href", url);
 
 let schedule = [];
 
@@ -74,6 +70,30 @@ window.onload = () => {
     console.log(e)
   })
 }
+
+document.querySelector(".deleteBtn").onclick = async () => {
+      document.querySelector(".popupBoxInfo2").innerHTML = `Are you sure you want to delete <span style="color:red">${decodeURI(department)} schedule</span>?`
+      popupBoxContainer2.style.display = "block"
+    }
+
+function canceldelete(){
+  popupBoxContainer2.style.display = "none";
+}
+
+async function deleteDepartment(){
+  const res = await fetch(`${url}/api/deleteDepartmentSched?label=${labelName}&department=${department}`);
+  const data = await res.json();
+  
+  if(data.success){
+    alert(`${decodeURI(department)} is successfully deleted!`)
+    window.location.href = `${url}/sched/data/${labelName}`;
+  }else{
+    alert(`${decodeURI(department)} schedule already deleted!`)
+  }
+  
+  popupBoxContainer2.style.display = "none";
+}
+
 
 // this is a callback function executed only when the addBtn is clicked
 addBtn.onclick = async function(){
@@ -153,6 +173,7 @@ addBtn.onclick = async function(){
     EHours.value = "";
     EMinutes.value = "";
     fillout.style.display = "none";
+    saveScheduleToDatabase(url, labelName, department, schedule);
   }else{
     fillout.style.display = "block";
     return;
@@ -160,22 +181,12 @@ addBtn.onclick = async function(){
   console.log(schedule)
 }
 
-// this is a callback function executed only when the saveBtn is clicked
-saveBtn.onclick = () => {
-  if(schedule.length > 0){
-    saveScheduleToDatabase(url, labelName, department, schedule);
-    return;
-  }
-  popupBoxContainer.style.display = "block";
-  popupBoxInfo.innerHTML = `Please add atleast 1 schedule before saving to database.`;
-}
-
 // close the popupBoxContainer when click
 document.querySelector('.popupButton').onclick = () => {
   document.querySelector('.popupBoxContainer').style.display = "none";
 }
 
-// function that checks if the new subject's time and room already exist.
+// function that checks if the new subject's time and room already exist in the current department schedule.
 async function isConflictSchedule(SCHED){
   
   let status = false;
@@ -193,6 +204,17 @@ async function isConflictSchedule(SCHED){
       popupBoxContainer.style.display = "block";
       popupBoxInfo.innerHTML = `Conflict Starting time with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
       status = true;
+      break; 
+    }else if(
+        SCHED.time.end[0] == 12 && 
+        SCHED.time.start[0] >= schedule[i].time.start[0] && 
+        SCHED.time.start[0] < schedule[i].time.end[0] && 
+        SCHED.room === schedule[i].room &&
+        SCHED.day === schedule[i].day 
+      ){
+      popupBoxContainer.style.display = "block";
+      popupBoxInfo.innerHTML = `Conflict Starting time with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
+      status = true;
       break;
     }else if(
         SCHED.time.start[0] == schedule[i].time.end[0] && 
@@ -205,9 +227,6 @@ async function isConflictSchedule(SCHED){
       popupBoxInfo.innerHTML = `Conflict Starting time with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
       status = true;
       break;
-      
-      
-    // checks if CLOSING time and room has conflict 
     }else if(
         SCHED.time.end[0] == 12 && 
         SCHED.time.start[0] == schedule[i].time.end[0] && 
@@ -234,11 +253,35 @@ async function isConflictSchedule(SCHED){
       status = true;
       break;
     }else if(
+        schedule[i].time.end[0] == 12 && 
+        SCHED.time.end[0] > schedule[i].time.start[0] && 
+        SCHED.time.end[0] < schedule[i].time.end[0] && 
+        SCHED.room === schedule[i].room &&
+        SCHED.day === schedule[i].day
+      ){
+      popupBoxContainer.style.display = "block";
+      popupBoxInfo.innerHTML = `Conflict Closing time with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
+      status = true;
+      break;
+    }else if(
         SCHED.time.end[0] == schedule[i].time.start[0] && 
         SCHED.time.end[1] > schedule[i].time.start[1] && 
         SCHED.room === schedule[i].room &&
         SCHED.day === schedule[i].day &&
         SCHED.timeStatus === schedule[i].timeStatus
+      ){
+      popupBoxContainer.style.display = "block";
+      popupBoxInfo.innerHTML = `Conflict Closing time with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
+      status = true;
+      break;
+      
+      
+    }else if(
+        schedule[i].time.end[0] == 12 && 
+        SCHED.time.end[0] == schedule[i].time.start[0] && 
+        SCHED.time.end[1] > schedule[i].time.start[1] && 
+        SCHED.room === schedule[i].room &&
+        SCHED.day === schedule[i].day 
       ){
       popupBoxContainer.style.display = "block";
       popupBoxInfo.innerHTML = `Conflict Closing time with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
@@ -252,6 +295,17 @@ async function isConflictSchedule(SCHED){
         SCHED.room === schedule[i].room &&
         SCHED.day === schedule[i].day &&
         SCHED.timeStatus === schedule[i].timeStatus
+      ){
+      popupBoxContainer.style.display = "block";
+      popupBoxInfo.innerHTML = `Conflict Time Range with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
+      status = true;
+      break;
+    }else if(
+        SCHED.time.end[0] == 12 && 
+        schedule[i].time.start[0] > SCHED.time.start[0] && 
+        schedule[i].time.start[0] < SCHED.time.end[0] && 
+        SCHED.room === schedule[i].room &&
+        SCHED.day === schedule[i].day
       ){
       popupBoxContainer.style.display = "block";
       popupBoxInfo.innerHTML = `Conflict Time Range with ${schedule[i].subject} in room ${schedule[i].room} on ${schedule[i].day}`;
@@ -273,17 +327,18 @@ async function isConflictSchedule(SCHED){
 }
 
 // function to send and save the data to the server
-function saveScheduleToDatabase(url, labelName, department, schedule){
-  fetch(`${url}/api/createSchedJSON?label=${labelName}&department=${department}.json&schedjson=${JSON.stringify(schedule)}`)
-  .then(res => res.json())
-  .then(d => {
-    if(d.status == "success"){
-      alert(`Schedule added to the database successfully.`)
-    }
-  })
-  .catch(e => alert(e))
+async function saveScheduleToDatabase(url, labelName, department, schedule){
+  const response = await fetch(`${url}/api/createSchedJSON?label=${labelName}&department=${department}.json&schedjson=${JSON.stringify(schedule)}`);
+  const data = await response.json();
+  if(data.status == "success"){
+    console.log(`Schedule added to the database successfully.`);
+  }else{
+    alert(`Error: ${decodeURI(department)} Schedule does not exist in the database! Please create a new department schedule and close this one :)`)
+  }
 }
 
+
+// function that checks if the new subject's time and room already exist in all department schedules.
 async function isAllSchedConflict(SCHED){
   let partialStatus;
   try {
@@ -366,4 +421,18 @@ async function isAllSchedConflict(SCHED){
     }
   } catch (e) {console.log(e)}
   return partialStatus;
+}
+
+// download the document file
+async function ExportAsDoc(){
+  const response = await fetch(`${url}/api/generateDocument?scheduleData=${JSON.stringify(schedule)}&department=${department}`);
+  const data = await response.blob();
+  console.log(data);
+  const link = await window.URL.createObjectURL(new Blob([data]));
+  const a = await document.createElement('a');
+  a.href = link;
+  a.download = `${decodeURI(department)}.docx`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }

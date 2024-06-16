@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />  <link rel="stylesheet" href="/css/styles.css">
-  <title>Subject Scheduling System by Renz Cole</title>
+  <title>Subject Scheduling System</title>
 </head>
 <body>
   <div class="navigation">
@@ -26,6 +26,9 @@
     </div>
     <div class="toggleMenu">
       <div class="devCon">
+        <a href="#" class="homeLink">
+          <p>Home</p>
+        </a>
         <div class="socials">
           <p>You can connect with me on these platforms: </p>
           <div class="socialBtns">
@@ -44,7 +47,11 @@
   
   <div class="container">
     <h2 class="systemTitle">Subject Scheduling System</h2>
-    <h2 class="schedLabel"></h2>
+    <h2 class="schedLabel">
+      <button class="deleteBtn">
+        <i class="fa-solid fa-trash-can"></i>
+      </button>
+    </h2>
     <div class="contentSchedule">
 <!-- <h3>1st Semester S.Y. 2024-2025 PAC SALUG CAMPUS</h3> -->
   </div>
@@ -62,8 +69,21 @@
     </div>
   </div>
   
+  <div class="popupBoxContainer2">
+    <div class="popupBox2">
+      <p class="popupBoxInfo2"></p>
+      <div class="btnss">
+        <button class="popupButton2 cancelDel" onclick="canceldelete()">Cancel</button>
+        <button class="popupButton2 deleteLabel" onclick="deletelabel()">Delete</button>
+      </div>
+    </div>
+
+  </div>
+
+  
   <script>
     const addScheduleInputContainer = document.querySelector(".addScheduleInputContainer");
+    const popupBoxContainer2 = document.querySelector(".popupBoxContainer2");
     const scheduleInput = document.querySelector(".scheduleInput");
     const schedLabel = document.querySelector(".schedLabel");
     
@@ -72,13 +92,8 @@
     const menuIcon = document.querySelector(".menuIcon");
 
     menuBtn.onclick = () => {
-      if(toggleMenu.offsetHeight > 0){
-        toggleMenu.style.height = 0;
-        toggleIcon();
-      }else{
-        toggleMenu.style.height = "104px";
-        toggleIcon();
-      }
+      toggleMenu.classList.toggle("toggle");
+      toggleIcon();
     }
     
     function toggleIcon(){
@@ -87,9 +102,11 @@
     }
     
     const urlPath = window.location.href;
-    const labelName = urlPath.slice(urlPath.indexOf("sched", urlPath.indexOf("sched") +1) + 11);
-    const url = urlPath.slice(0, urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) - 1);
-    schedLabel.innerText = decodeURI(labelName);
+    const labelName = urlPath.slice(urlPath.indexOf("/sched/") + 12);
+    const url = urlPath.slice(0, urlPath.indexOf("/sched/"));
+    
+    schedLabel.innerHTML = `${decodeURI(labelName)} <button class="deleteBtn"><i class="fa-solid fa-trash-can"></i></button>`;
+    document.querySelector(".homeLink").setAttribute("href", url);
     
     // onload fetch Department Schedules from server
     window.onload = () => {
@@ -118,31 +135,49 @@
       scheduleInput.value = "";
     }
     
-    document.querySelector(".addBtn").onclick = () => {
+    document.querySelector(".addBtn").onclick = async () => {
       if(scheduleInput.value.length > 0){
         const element = document.createElement("a");
         element.setAttribute("href", `/sched/addsched/${labelName}/depart/${scheduleInput.value}`);
         element.innerHTML = `<h3>${scheduleInput.value}</h3>`;
         
-        fetch(`${url}/api/createDepartmentSched?label=${labelName}&department=${scheduleInput.value}`)
-          .then(res => res.json())
-          .then(data => {
-            if(data.status === "success"){
-              document.querySelector(".contentSchedule").appendChild(element);
-            }else{
-              alert("File already exist.")
-            }
-          })
-          .catch(e => {
-            console.log(e);
-            alert("An Error occured.")
-            })
-        
+        try{
+          const res = await fetch(`${url}/api/createDepartmentSched?label=${labelName}&department=${scheduleInput.value}`);
+          const data = await res.json();
+          if(data.status === "success"){
+            document.querySelector(".contentSchedule").appendChild(element);
+          }else{alert("File already exist.")}
+        }catch(e){alert("An error occured.")}
         
         addScheduleInputContainer.style.display = "none";
         scheduleInput.value = "";
       }
     }
+    
+    document.querySelector(".deleteBtn").onclick = async () => {
+      document.querySelector(".popupBoxInfo2").innerHTML = `Are you sure you want to delete <span style="color:red">${decodeURI(labelName)}</span>?`
+      popupBoxContainer2.style.display = "block"
+    }
+    
+    function canceldelete(){
+      popupBoxContainer2.style.display = "none";
+    }
+    
+    async function deletelabel(){
+      try{
+        const res = await fetch(`${url}/api/deleteSchedLabel?label=${labelName}`);
+        const data = await res.json();
+        if(data.success){
+          alert(`${decodeURI(labelName)} is successfully deleted!`)
+          window.location.href = url;
+        }else{
+          alert(`${decodeURI(labelName)} already deleted!`)
+        }
+      }catch(e){}
+
+      popupBoxContainer2.style.display = "none";
+    }
+    
   </script>
 </body>
 </html>
