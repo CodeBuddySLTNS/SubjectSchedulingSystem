@@ -326,7 +326,6 @@ const deleteSchedLabel = async (req, res) => {
   }
 }
 const deleteDepartmentSched = async (req, res) => {
-  console.log(req.query.department);
   if(!fs.existsSync(path.join(__dirname, "..", "database", req.query.label, `${req.query.department}.json`))){
     return res.json({success: false})
   }

@@ -360,6 +360,17 @@ async function isAllSchedConflict(SCHED){
           popupBoxInfo.innerHTML = `Conflict Starting time with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
           return true;
         }else if(
+            SCHED.time.end[0] == 12 &&
+            SCHED.time.start[0] >= schedData[i][x].time.start[0] && 
+            SCHED.time.start[0] < schedData[i][x].time.end[0] && 
+            SCHED.room === schedData[i][x].room &&
+            SCHED.day === schedData[i][x].day 
+          ){
+          popupBoxContainer.style.display = "block";
+          popupBoxInfo.innerHTML = `Conflict Starting time with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
+          return true;
+          
+        }else if(
             SCHED.time.start[0] == schedData[i][x].time.end[0] && 
             SCHED.time.start[1] < schedData[i][x].time.end[1] && 
             SCHED.room === schedData[i][x].room &&
@@ -379,7 +390,8 @@ async function isAllSchedConflict(SCHED){
           ){
           popupBoxContainer.style.display = "block";
           popupBoxInfo.innerHTML = `Conflict Starting time with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
-          return true;        
+          return true; 
+          
         // checks if CLOSING time and room has conflict 
         }else if(
             SCHED.time.end[0] > schedData[i][x].time.start[0] && 
@@ -392,11 +404,33 @@ async function isAllSchedConflict(SCHED){
           popupBoxInfo.innerHTML = `Conflict Closing time with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
           return true;
         }else if(
+            schedData[i][x].time.end[0] = 12 && 
+            SCHED.time.end[0] > schedData[i][x].time.start[0] && 
+            SCHED.time.end[0] < schedData[i][x].time.end[0] && 
+            SCHED.room === schedData[i][x].room &&
+            SCHED.day === schedData[i][x].day 
+          ){
+          popupBoxContainer.style.display = "block";
+          popupBoxInfo.innerHTML = `Conflict Closing time with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
+          return true;
+          
+        }else if(
             SCHED.time.end[0] == schedData[i][x].time.start[0] && 
             SCHED.time.end[1] > schedData[i][x].time.start[1] && 
             SCHED.room === schedData[i][x].room &&
             SCHED.day === schedData[i][x].day &&
             SCHED.timeStatus === schedData[i][x].timeStatus
+          ){
+          popupBoxContainer.style.display = "block";
+          popupBoxInfo.innerHTML = `Conflict Closing time with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
+          return true;
+          
+        }else if(
+            schedData[i][x].time.end[0] = 12 && 
+            SCHED.time.end[0] == schedData[i][x].time.start[0] && 
+            SCHED.time.end[1] > schedData[i][x].time.start[1] && 
+            SCHED.room === schedData[i][x].room &&
+            SCHED.day === schedData[i][x].day 
           ){
           popupBoxContainer.style.display = "block";
           popupBoxInfo.innerHTML = `Conflict Closing time with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
