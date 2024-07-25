@@ -447,6 +447,17 @@ async function isAllSchedConflict(SCHED){
           popupBoxContainer.style.display = "block";
           popupBoxInfo.innerHTML = `Conflict Time Range with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
           return true;
+        }else if(
+            SCHED.time.end[0] == 12 && 
+            schedData[i][x].time.start[0] > SCHED.time.start[0] && 
+            schedData[i][x].time.start[0] < SCHED.time.end[0] && 
+            SCHED.room === schedData[i][x].room &&
+            SCHED.day === schedData[i][x].day &&
+            SCHED.timeStatus === schedData[i][x].timeStatus
+          ){
+          popupBoxContainer.style.display = "block";
+          popupBoxInfo.innerHTML = `Conflict Time Range with ${schedData[i][x].subject} in room ${schedData[i][x].room} on ${schedData[i][x].day} in ${schedData[i][x].department} Schedule.`;
+          return true;
           
         }else{
           partialStatus = false;

@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />  <link rel="stylesheet" href="/css/styles.css">
-  <title>Subject Scheduling System by Renz Cole</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
+
+  <link rel="stylesheet" href="/css/styles.css">
+  <title>Subject Scheduling System</title>
 </head>
 <body>
   <div class="navigation">
@@ -26,6 +28,9 @@
     </div>
     <div class="toggleMenu">
       <div class="devCon">
+        <a href="/" class="homeLink">
+          <p>Home</p>
+        </a>
         <div class="socials">
           <p>You can connect with me on these platforms: </p>
           <div class="socialBtns">
@@ -44,16 +49,15 @@
   
   <div class="container">
     <h2 class="systemTitle">Subject Scheduling System</h2>
-    <h2 class="schedLabel"></h2>
     <div class="contentSchedule">
 <!-- <h3>1st Semester S.Y. 2024-2025 PAC SALUG CAMPUS</h3> -->
   </div>
-    <h3 class="addScheduleLabel">Add Department Schedule</h3>
+    <h3 class="addScheduleLabel">Add Schedule Label</h3>
   </div>
   
   <div class="addScheduleInputContainer">
     <div class="addScheduleInput">
-      <p>Add Department Schedule</p>
+      <p>Add Schedule Label</p>
       <input class="scheduleInput" type="text"/>
       <div class="addScheduleBtns">
         <button class="cancelBtn">Cancel</button>
@@ -65,20 +69,13 @@
   <script>
     const addScheduleInputContainer = document.querySelector(".addScheduleInputContainer");
     const scheduleInput = document.querySelector(".scheduleInput");
-    const schedLabel = document.querySelector(".schedLabel");
-    
     const toggleMenu = document.querySelector(".toggleMenu");
     const menuBtn = document.querySelector(".menuBtn");
     const menuIcon = document.querySelector(".menuIcon");
-
+    
     menuBtn.onclick = () => {
-      if(toggleMenu.offsetHeight > 0){
-        toggleMenu.style.height = 0;
-        toggleIcon();
-      }else{
-        toggleMenu.style.height = "104px";
-        toggleIcon();
-      }
+      toggleMenu.classList.toggle("toggle");
+      toggleIcon();
     }
     
     function toggleIcon(){
@@ -86,21 +83,16 @@
       menuIcon.classList.toggle("fa-bars");
     }
     
-    const urlPath = window.location.href;
-    const labelName = urlPath.slice(urlPath.indexOf("sched", urlPath.indexOf("sched") +1) + 11);
-    const url = urlPath.slice(0, urlPath.indexOf("sched", urlPath.indexOf("sched") + 1) - 1);
-    schedLabel.innerText = decodeURI(labelName);
-    
-    // onload fetch Department Schedules from server
+    // onload fetch Schedule labels from server
     window.onload = () => {
-      fetch(`${url}/api/getAllDepartmentSched?label=${labelName}`)
+      fetch("/api/getAllSchedLabel")
         .then(res => res.json())
-        .then(files => {
-          const data = files.response;
-          data.forEach(file => {
+        .then(folders => {
+          const data = folders.response;
+          data.forEach(folder => {
             const element = document.createElement("a");
-            element.setAttribute("href", `/sched/addsched/${labelName}/depart/${file.slice(0, file.indexOf(".json"))}`);
-            element.innerHTML = `<h3>${file.slice(0, file.indexOf(".json"))}</h3>`;
+            element.setAttribute("href", `/sched/data/${folder}`)
+            element.innerHTML = `<h3>${folder}</h3>`;
             document.querySelector(".contentSchedule").appendChild(element);
           })
         })
@@ -121,10 +113,9 @@
     document.querySelector(".addBtn").onclick = () => {
       if(scheduleInput.value.length > 0){
         const element = document.createElement("a");
-        element.setAttribute("href", `/sched/addsched/${labelName}/depart/${scheduleInput.value}`);
+        element.setAttribute("href", `/sched/data/${scheduleInput.value}`)
         element.innerHTML = `<h3>${scheduleInput.value}</h3>`;
-        
-        fetch(`${url}/api/createDepartmentSched?label=${labelName}&department=${scheduleInput.value}`)
+        fetch(`/api/createSchedLabel?label=${scheduleInput.value}`)
           .then(res => res.json())
           .then(data => {
             if(data.status === "success"){
